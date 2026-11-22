@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartRoute – Intelligent Delivery Route Optimization</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ============================================================ -->
+    <!-- 1. HEADER & NAVIGATION                                       -->
+    <!-- ============================================================ -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="3" width="15" height="13"></rect>
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">SmartRoute</span>
+                    <span class="brand-badge">A* AI Optimizer</span>
+                </div>
+            </div>
+
+            <nav class="nav-links">
+                <a href="#dashboard" class="nav-link active">Home</a>
+                <a href="#map-section" class="nav-link">Network Map</a>
+                <a href="#traffic-section" class="nav-link">Traffic Control</a>
+                <a href="#about-section" class="nav-link">Algorithm</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- 2. MAIN DASHBOARD HERO & CONTROLS                            -->
+    <!-- ============================================================ -->
+    <main class="main-content" id="dashboard">
+        
+        <!-- Hero Header -->
+        <section class="hero-section">
+            <h1 class="hero-title">Intelligent Delivery Route Planner</h1>
+            <p class="hero-subtitle">
+                Find the minimum travel-time delivery path between a central warehouse and destination points using the 
+                <strong>A* Search Algorithm</strong> with Euclidean distance heuristics on the Tumakuru road network.
+            </p>
+        </section>
+
+        <!-- Notification Banner -->
+        <div id="status-banner" class="status-banner hidden" role="alert">
+            <span id="status-message">Ready to find optimal route.</span>
+            <button id="banner-close" class="banner-close" aria-label="Close message">&times;</button>
+        </div>
+
+        <!-- Two Column Dashboard Grid -->
+        <div class="dashboard-grid">
+            
+            <!-- LEFT COLUMN: Controls & Results -->
+            <div class="dashboard-sidebar">
+                
+                <!-- Card 1: Route Planning Controls -->
+                <div class="card control-card">
+                    <div class="card-header">
+                        <div class="card-icon navy-bg">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <h2 class="card-title">Route Configuration</h2>
+                    </div>
+
+                    <form id="route-form" class="card-body">
+                        <!-- Source Dropdown -->
+                        <div class="form-group">
+                            <label for="source-select" class="form-label">
+                                <strong>Source (Starting Intersection):</strong>
+                            </label>
+                            <select id="source-select" class="form-select" required>
+                                <option value="" disabled selected>Loading intersections...</option>
+                            </select>
+                        </div>
+
+                        <!-- Destination Dropdown -->
+                        <div class="form-group">
+                            <label for="destination-select" class="form-label">
+                                <strong>Destination (Delivery Point):</strong>
+                            </label>
+                            <select id="destination-select" class="form-select" required>
+                                <option value="" disabled selected>Loading destinations...</option>
+                            </select>
+                        </div>
+
+                        <!-- Action Button -->
+                        <button type="submit" id="btn-find-route" class="btn btn-primary btn-block">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            <span>Find Optimal Route</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Card 2: Route Results Section -->
+                <div class="card result-card" id="results-card">
+                    <div class="card-header">
+                        <div class="card-icon green-bg">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                        <h2 class="card-title">Optimization Results</h2>
+                    </div>
+
+                    <div class="card-body">
+                        <div id="results-placeholder" class="results-placeholder">
+                            <p>Select a source and destination, then click <strong>Find Optimal Route</strong> to view A* path metrics.</p>
+                        </div>
+
+                        <div id="results-content" class="results-content hidden">
+                            <!-- Metric Stat Pills -->
+                            <div class="metrics-row">
+                                <div class="metric-box">
+                                    <span class="metric-label">Total Travel Time</span>
+                                    <span class="metric-value" id="metric-travel-time">-- min</span>
+                                </div>
+                                <div class="metric-box">
+                                    <span class="metric-label">Nodes Explored</span>
+                                    <span class="metric-value" id="metric-explored-count">--</span>
+                                </div>
+                                <div class="metric-box">
+                                    <span class="metric-label">Route Steps</span>
+                                    <span class="metric-value" id="metric-route-steps">--</span>
+                                </div>
+                            </div>
+
+                            <!-- Optimal Path Ordered Badge List -->
+                            <div class="result-path-wrapper">
+                                <span class="subheading">Optimal Path Sequence:</span>
+                                <div id="optimal-path-badges" class="path-badges">
+                                    <!-- Injected via JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Explored Nodes Trace -->
+                            <div class="result-explored-wrapper">
+                                <span class="subheading">A* Exploration Order:</span>
+                                <div id="explored-nodes-list" class="explored-list">
+                                    <!-- Injected via JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Road Segments Breakdown -->
+                            <div class="result-table-wrapper">
+                                <span class="subheading">Leg-by-Leg Road Breakdown:</span>
+                                <table class="table-breakdown" id="legs-table">
+                                    <thead>
+                                        <tr>
+                                            <th>From &rarr; To</th>
+                                            <th>Road Name</th>
+                                            <th>Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="legs-table-body">
+                                        <!-- Injected via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Dynamic Traffic Simulation -->
+                <div class="card traffic-card" id="traffic-section">
+                    <div class="card-header">
+                        <div class="card-icon amber-bg">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </div>
+                        <h2 class="card-title">Traffic Simulation Panel</h2>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="section-desc">
+                            Adjust road travel times to simulate traffic jams or cleared roads, and observe how A* intelligently recalculates the route.
+                        </p>
+
+                        <div class="form-group">
+                            <label for="traffic-road-select" class="form-label">Select Road Segment:</label>
+                            <select id="traffic-road-select" class="form-select">
+                                <option value="" disabled selected>Loading roads...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="traffic-time-input" class="form-label">
+                                New Travel Time (Minutes):
+                            </label>
+                            <div class="input-with-button">
+                                <input type="number" id="traffic-time-input" class="form-input" min="1" max="99" step="0.5" placeholder="e.g. 15.0">
+                                <button type="button" id="btn-update-traffic" class="btn btn-secondary">
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Presets -->
+                        <div class="traffic-presets">
+                            <span class="preset-label">Quick Delay:</span>
+                            <button type="button" class="btn-preset" data-add="5">+5 min</button>
+                            <button type="button" class="btn-preset" data-add="10">+10 min</button>
+                            <button type="button" class="btn-preset" data-add="15">+15 min (Jam)</button>
+                            <button type="button" id="btn-reset-traffic" class="btn-preset btn-preset-reset">Reset All</button>
+                        </div>
+
+                        <!-- Active Overrides List -->
+                        <div id="active-traffic-container" class="active-traffic-box hidden">
+                            <span class="subheading">Active Traffic Bottlenecks:</span>
+                            <ul id="active-traffic-list" class="traffic-tag-list"></ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Interactive SVG Road Network Map -->
+            <div class="dashboard-map-column" id="map-section">
+                <div class="card map-card">
+                    <div class="card-header map-header">
+                        <div class="map-header-left">
+                            <div class="card-icon navy-bg">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                                </svg>
+                            </div>
+                            <h2 class="card-title">Tumakuru Road Network Visualization</h2>
+                        </div>
+                        <div class="map-header-right">
+                            <button id="btn-reset-map" class="btn btn-ghost btn-sm" title="Clear highlights">
+                                Clear Highlight
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Map Legend -->
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <span class="legend-dot warehouse-dot"></span>
+                            <span>Warehouse (Start)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot destination-dot"></span>
+                            <span>Delivery Destination</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot intersection-dot"></span>
+                            <span>Intersection</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-line optimal-line"></span>
+                            <span>Optimal Path</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-line traffic-line"></span>
+                            <span>Congested Road</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot explored-dot"></span>
+                            <span>Explored Node</span>
+                        </div>
+                    </div>
+
+                    <!-- SVG Canvas Container -->
+                    <div class="svg-container">
+                        <svg id="road-network-svg" viewBox="0 0 820 500" preserveAspectRatio="xMidYMid meet">
+                            <!-- Dynamic SVG Layers: Roads, Highlights, Nodes, Labels -->
+                            <g id="svg-edges-layer"></g>
+                            <g id="svg-route-layer"></g>
+                            <g id="svg-edge-labels-layer"></g>
+                            <g id="svg-nodes-layer"></g>
+                        </svg>
+                    </div>
+
+                    <!-- Map Footer Details -->
+                    <div class="map-footer">
+                        <span>Tip: Hover over any intersection or road to inspect name and coordinates.</span>
+                        <span id="map-network-stat">12 Intersections &bull; 18 Bidirectional Roads</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 3. ABOUT SECTION & ALGORITHM EDUCATIONAL BREAKDOWN           -->
+        <!-- ============================================================ -->
+        <section class="about-section" id="about-section">
+            <div class="about-header">
+                <span class="about-badge">Academic Concept Guide</span>
+                <h2 class="about-title">How the A* Search Algorithm Works</h2>
+                <p class="about-subtitle">
+                    A* is an informed (heuristic) search algorithm widely used in pathfinding, robotics, and logistics. 
+                    It guarantees finding the shortest path efficiently by combining the actual cost traversed so far 
+                    with an admissible heuristic estimate of the remaining distance.
+                </p>
+            </div>
+
+            <!-- 3 Column Cards for f(n), g(n), h(n) -->
+            <div class="formula-grid">
+                
+                <div class="formula-card">
+                    <div class="formula-badge">Evaluation Function</div>
+                    <h3 class="formula-expr">f(n) = g(n) + h(n)</h3>
+                    <p class="formula-desc">
+                        The total estimated travel time of the cheapest solution passing through intersection <strong>n</strong>. 
+                        The priority queue always selects and expands the node with the minimum <strong>f(n)</strong>.
+                    </p>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-badge">Actual Path Cost</div>
+                    <h3 class="formula-expr">g(n)</h3>
+                    <p class="formula-desc">
+                        The exact accumulated travel time (in minutes) taken to travel from the starting warehouse 
+                        to node <strong>n</strong> along the current path. Increases as road travel times change due to traffic.
+                    </p>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-badge">Heuristic Function</div>
+                    <h3 class="formula-expr">h(n) = &radic;(&Delta;x&sup2; + &Delta;y&sup2;) / V<sub>max</sub></h3>
+                    <p class="formula-desc">
+                        The estimated straight-line travel time from intersection <strong>n</strong> to the destination. 
+                        Dividing Euclidean distance by maximum speed (V<sub>max</sub> = 40.0 units/min) ensures the estimate 
+                        is <strong>admissible</strong> (never overestimates) and <strong>consistent</strong> (monotonic).
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Admissibility and Consistency Deep Dive -->
+            <div class="card theory-card">
+                <div class="card-header">
+                    <h3 class="card-title">Mathematical Guarantees: Admissibility and Consistency</h3>
+                </div>
+                <div class="card-body theory-body">
+                    <div class="theory-point">
+                        <h4>1. Admissibility Condition: h(n) &le; h*(n)</h4>
+                        <p>
+                            A heuristic is <em>admissible</em> if it never overestimates the true cost <em>h*(n)</em> to reach the goal. 
+                            Since a straight line represents the shortest possible physical distance between two points, and no vehicle 
+                            can exceed <em>V<sub>max</sub></em>, the straight-line time estimate is always lower than or equal to the actual road travel time. 
+                            Admissibility mathematically guarantees that A* will find the optimal path.
+                        </p>
+                    </div>
+
+                    <div class="theory-point">
+                        <h4>2. Consistency (Monotonicity) Condition: h(n) &le; cost(n, n&prime;) + h(n&prime;)</h4>
+                        <p>
+                            A heuristic is <em>consistent</em> if for every node <em>n</em> and neighbor <em>n&prime;</em>, the estimated cost 
+                            from <em>n</em> to goal is no greater than the step cost from <em>n</em> to <em>n&prime;</em> plus the estimated cost 
+                            from <em>n&prime;</em> to goal. By the triangle inequality of Euclidean geometry, straight-line distance satisfies this property. 
+                            Consistency guarantees that once a node is expanded, its optimal path is found, eliminating the need to re-open closed nodes.
+                        </p>
+                    </div>
+
+                    <div class="theory-point">
+                        <h4>3. How Route Optimization Works in SmartRoute</h4>
+                        <ol class="theory-steps">
+                            <li><strong>Priority Queue Initialization:</strong> Push starting node with f(start) = 0 + h(start, goal).</li>
+                            <li><strong>Expansion:</strong> Pop node <em>current</em> with smallest f(n). If it is the destination, terminate and reconstruct route.</li>
+                            <li><strong>Neighbor Evaluation:</strong> For each neighbor, calculate tentative travel time <em>g(neighbor)</em>. If faster than previously recorded, update parent pointer, calculate f(neighbor), and push to priority queue.</li>
+                            <li><strong>Traffic Adaptation:</strong> When road costs increase, <em>g(n)</em> for congested paths increases, prompting A* to automatically steer through alternative, less congested corridors.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- 4. FOOTER                                                    -->
+    <!-- ============================================================ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2026 SmartRoute &bull; College AI Mini-Project: Intelligent Delivery Route Optimization Using A* Search Algorithm</p>
+            <p class="footer-sub">Designed for Tumakuru Delivery Logistics &bull; Pure Python Flask &bull; Vanilla JavaScript &bull; SVG Visualization</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Entry Point -->
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+{
+  "city": "Tumakuru",
+  "description": "Fictional delivery road network for Tumakuru city center",
+  "max_speed_units_per_min": 40.0,
+  "warehouse": "A",
+  "destinations": ["G", "H", "I", "K", "L"],
+  "intersections": {
+    "A": {
+      "name": "Central Warehouse (B.H. Road)",
+      "x": 80,
+      "y": 250,
+      "type": "warehouse"
+    },
+    "B": {
+      "name": "Ashoka Road Circle",
+      "x": 220,
+      "y": 140,
+      "type": "intersection"
+    },
+    "C": {
+      "name": "Town Hall Square",
+      "x": 220,
+      "y": 360,
+      "type": "intersection"
+    },
+    "D": {
+      "name": "Mandipet Market Cross",
+      "x": 360,
+      "y": 250,
+      "type": "intersection"
+    },
+    "E": {
+      "name": "Gubbi Gate Circle",
+      "x": 360,
+      "y": 120,
+      "type": "intersection"
+    },
+    "F": {
+      "name": "Sapthagiri Extension",
+      "x": 360,
+      "y": 380,
+      "type": "intersection"
+    },
+    "G": {
+      "name": "SIT Campus Cross",
+      "x": 500,
+      "y": 120,
+      "type": "delivery_point"
+    },
+    "H": {
+      "name": "SSIT College Road",
+      "x": 500,
+      "y": 380,
+      "type": "delivery_point"
+    },
+    "I": {
+      "name": "Batawadi Bypass Junction",
+      "x": 640,
+      "y": 250,
+      "type": "delivery_point"
+    },
+    "J": {
+      "name": "Industrial Area Gate",
+      "x": 500,
+      "y": 250,
+      "type": "intersection"
+    },
+    "K": {
+      "name": "Maralur Lake Junction",
+      "x": 640,
+      "y": 120,
+      "type": "delivery_point"
+    },
+    "L": {
+      "name": "Kyatsandra Delivery Hub",
+      "x": 740,
+      "y": 250,
+      "type": "delivery_point"
+    }
+  },
+  "roads": [
+    {
+      "id": "A-B",
+      "from": "A",
+      "to": "B",
+      "name": "B.H. Road Northern Link",
+      "travel_time": 5.0,
+      "bidirectional": true
+    },
+    {
+      "id": "A-C",
+      "from": "A",
+      "to": "C",
+      "name": "Railway Station Road",
+      "travel_time": 5.5,
+      "bidirectional": true
+    },
+    {
+      "id": "B-E",
+      "from": "B",
+      "to": "E",
+      "name": "Ashoka Extension Road",
+      "travel_time": 4.0,
+      "bidirectional": true
+    },
+    {
+      "id": "B-D",
+      "from": "B",
+      "to": "D",
+      "name": "Market Link North",
+      "travel_time": 6.0,
+      "bidirectional": true
+    },
+    {
+      "id": "C-D",
+      "from": "C",
+      "to": "D",
+      "name": "Town Hall Avenue",
+      "travel_time": 5.5,
+      "bidirectional": true
+    },
+    {
+      "id": "C-F",
+      "from": "C",
+      "to": "F",
+      "name": "Sapthagiri Main Road",
+      "travel_time": 4.5,
+      "bidirectional": true
+    },
+    {
+      "id": "E-G",
+      "from": "E",
+      "to": "G",
+      "name": "Gubbi - SIT Connecting Road",
+      "travel_time": 4.0,
+      "bidirectional": true
+    },
+    {
+      "id": "E-D",
+      "from": "E",
+      "to": "D",
+      "name": "Old Mandipet Lane",
+      "travel_time": 4.5,
+      "bidirectional": true
+    },
+    {
+      "id": "D-F",
+      "from": "D",
+      "to": "F",
+      "name": "Mandipet South Cut",
+      "travel_time": 4.5,
+      "bidirectional": true
+    },
+    {
+      "id": "D-J",
+      "from": "D",
+      "to": "J",
+      "name": "Central Spine Road",
+      "travel_time": 5.0,
+      "bidirectional": true
+    },
+    {
+      "id": "F-H",
+      "from": "F",
+      "to": "H",
+      "name": "SSIT Campus Highway",
+      "travel_time": 5.0,
+      "bidirectional": true
+    },
+    {
+      "id": "G-K",
+      "from": "G",
+      "to": "K",
+      "name": "North Ring Road Segment 1",
+      "travel_time": 4.5,
+      "bidirectional": true
+    },
+    {
+      "id": "G-J",
+      "from": "G",
+      "to": "J",
+      "name": "SIT Industrial Cross",
+      "travel_time": 4.5,
+      "bidirectional": true
+    },
+    {
+      "id": "H-J",
+      "from": "H",
+      "to": "J",
+      "name": "South Industrial Connector",
+      "travel_time": 4.5,
+      "bidirectional": true
+    },
+    {
+      "id": "H-I",
+      "from": "H",
+      "to": "I",
+      "name": "Batawadi South Approach",
+      "travel_time": 6.5,
+      "bidirectional": true
+    },
+    {
+      "id": "J-I",
+      "from": "J",
+      "to": "I",
+      "name": "Industrial East Arterial",
+      "travel_time": 4.0,
+      "bidirectional": true
+    },
+    {
+      "id": "K-L",
+      "from": "K",
+      "to": "L",
+      "name": "Kyatsandra North Bypass",
+      "travel_time": 4.5,
+      "bidirectional": true
+    },
+    {
+      "id": "I-L",
+      "from": "I",
+      "to": "L",
+      "name": "Kyatsandra Main Access",
+      "travel_time": 3.0,
+      "bidirectional": true
+    }
+  ]
+}
